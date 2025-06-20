@@ -8,13 +8,9 @@ export default function InputPage() {
   const router = useRouter();
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [weather, setWeather] = useState({ condition: "맑음", temperature: "20°C" });
-  const [salesData, setSalesData] = useState({
-    cash: "",
-    card: "",
-    onnuri: "",
-    delivery: "",
-    other: ""
-  });
+  const [salesRows, setSalesRows] = useState([
+    { id: 1, paymentType: "", amount: "" }
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -55,11 +51,23 @@ export default function InputPage() {
     setDate(e.target.value);
   };
 
-  const handleSalesChange = (field, value) => {
-    setSalesData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleSalesChange = (id, field, value) => {
+    setSalesRows(prev => 
+      prev.map(row => 
+        row.id === id ? { ...row, [field]: value } : row
+      )
+    );
+  };
+
+  const addRow = () => {
+    const newId = Math.max(...salesRows.map(row => row.id), 0) + 1;
+    setSalesRows(prev => [...prev, { id: newId, paymentType: "", amount: "" }]);
+  };
+
+  const removeRow = (id) => {
+    if (salesRows.length > 1) {
+      setSalesRows(prev => prev.filter(row => row.id !== id));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -68,15 +76,29 @@ export default function InputPage() {
     setMessage("");
 
     try {
-      const totalAmount = Object.values(salesData).reduce((sum, value) => {
-        return sum + (parseInt(value) || 0);
-      }, 0);
+      // 유효한 데이터만 필터링
+      const validRows = salesRows.filter(row => 
+        row.paymentType && row.amount && parseInt(row.amount) > 0
+      );
 
-      if (totalAmount === 0) {
+      if (validRows.length === 0) {
         setMessage("최소 하나의 매출 항목을 입력해주세요.");
         setIsLoading(false);
         return;
       }
+
+      // 매출 데이터를 API 형식으로 변환
+      const salesData = {};
+      validRows.forEach(row => {
+        const type = row.paymentType;
+        const amount = parseInt(row.amount);
+        if (!salesData[type]) {
+          salesData[type] = 0;
+        }
+        salesData[type] += amount;
+      });
+
+      const totalAmount = Object.values(salesData).reduce((sum, value) => sum + value, 0);
 
       const response = await fetch("/api/sales", {
         method: "POST",
@@ -110,13 +132,7 @@ export default function InputPage() {
   };
 
   const resetForm = () => {
-    setSalesData({
-      cash: "",
-      card: "",
-      onnuri: "",
-      delivery: "",
-      other: ""
-    });
+    setSalesRows([{ id: 1, paymentType: "", amount: "" }]);
     setMessage("");
   };
 
@@ -138,6 +154,12 @@ export default function InputPage() {
       case "눈": return "❄️";
       default: return "🌤️";
     }
+  };
+
+  const getTotalAmount = () => {
+    return salesRows
+      .filter(row => row.paymentType && row.amount && parseInt(row.amount) > 0)
+      .reduce((sum, row) => sum + parseInt(row.amount), 0);
   };
 
   return (
@@ -184,68 +206,67 @@ export default function InputPage() {
 
         {/* 매출 입력 섹션 */}
         <div className={styles.salesSection}>
-          <h2>매출 입력</h2>
+          <div className={styles.salesHeader}>
+            <h2>매출 입력</h2>
+            <button 
+              type="button" 
+              onClick={addRow} 
+              className={styles.addRowButton}
+            >
+              + 행 추가
+            </button>
+          </div>
           
-          <div className={styles.salesGrid}>
-            <div className={styles.salesItem}>
-              <label htmlFor="cash">현금 매출</label>
-              <input
-                id="cash"
-                type="number"
-                value={salesData.cash}
-                onChange={(e) => handleSalesChange("cash", e.target.value)}
-                placeholder="0"
-                min="0"
-              />
+          <div className={styles.salesTable}>
+            <div className={styles.tableHeader}>
+              <div className={styles.headerPaymentType}>매출처</div>
+              <div className={styles.headerAmount}>금액</div>
+              <div className={styles.headerAction}>삭제</div>
             </div>
-
-            <div className={styles.salesItem}>
-              <label htmlFor="card">카드 매출</label>
-              <input
-                id="card"
-                type="number"
-                value={salesData.card}
-                onChange={(e) => handleSalesChange("card", e.target.value)}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-
-            <div className={styles.salesItem}>
-              <label htmlFor="onnuri">온누리상품권</label>
-              <input
-                id="onnuri"
-                type="number"
-                value={salesData.onnuri}
-                onChange={(e) => handleSalesChange("onnuri", e.target.value)}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-
-            <div className={styles.salesItem}>
-              <label htmlFor="delivery">배달 매출</label>
-              <input
-                id="delivery"
-                type="number"
-                value={salesData.delivery}
-                onChange={(e) => handleSalesChange("delivery", e.target.value)}
-                placeholder="0"
-                min="0"
-              />
-            </div>
-
-            <div className={styles.salesItem}>
-              <label htmlFor="other">기타 매출</label>
-              <input
-                id="other"
-                type="number"
-                value={salesData.other}
-                onChange={(e) => handleSalesChange("other", e.target.value)}
-                placeholder="0"
-                min="0"
-              />
-            </div>
+            
+            {salesRows.map((row) => (
+              <div key={row.id} className={styles.salesRow}>
+                <div className={styles.paymentTypeCell}>
+                  <select
+                    value={row.paymentType}
+                    onChange={(e) => handleSalesChange(row.id, "paymentType", e.target.value)}
+                    required
+                    className={styles.paymentTypeSelect}
+                  >
+                    <option value="">매출처 선택</option>
+                    <option value="cash">현금</option>
+                    <option value="card">카드</option>
+                    <option value="onnuri">온누리상품권</option>
+                    <option value="delivery">배달</option>
+                    <option value="other">기타</option>
+                  </select>
+                </div>
+                
+                <div className={styles.amountCell}>
+                  <input
+                    type="number"
+                    value={row.amount}
+                    onChange={(e) => handleSalesChange(row.id, "amount", e.target.value)}
+                    placeholder="0"
+                    min="0"
+                    required
+                    className={styles.amountInput}
+                  />
+                </div>
+                
+                <div className={styles.actionCell}>
+                  {salesRows.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeRow(row.id)}
+                      className={styles.removeButton}
+                    >
+                      삭제
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* 총 매출 표시 */}
@@ -253,7 +274,7 @@ export default function InputPage() {
             <div className={styles.totalAmount}>
               <span>총 매출:</span>
               <span className={styles.totalValue}>
-                {Object.values(salesData).reduce((sum, value) => sum + (parseInt(value) || 0), 0).toLocaleString()}원
+                {getTotalAmount().toLocaleString()}원
               </span>
             </div>
           </div>
