@@ -1,0 +1,336 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.headerCenter {
+  flex: 2;
+  text-align: center;
+}
+
+.headerRight {
+  flex: 1;
+}
+
+.backButton {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButton:hover {
+  background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(127, 140, 141, 0.3);
+}
+
+.header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.form {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* 날짜 및 날씨 섹션 */
+.dateWeatherSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  color: white;
+}
+
+.dateInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dateInput label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.dateInput input {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2c3e50;
+}
+
+.weatherInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.weatherIcon {
+  font-size: 3rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.weatherDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weatherCondition {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.temperature {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* 매출 입력 섹션 */
+.salesSection {
+  margin-bottom: 2rem;
+}
+
+.salesSection h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.salesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.salesItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.salesItem label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.salesItem input {
+  padding: 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.salesItem input:focus {
+  outline: none;
+  border-color: #3498db;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.salesItem input::placeholder {
+  color: #bdc3c7;
+}
+
+/* 총 매출 섹션 */
+.totalSection {
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.totalAmount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.totalValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* 메시지 스타일 */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* 버튼 섹션 */
+.buttonSection {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.clearButton,
+.submitButton {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.clearButton {
+  background: #95a5a6;
+  color: white;
+}
+
+.clearButton:hover:not(:disabled) {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.clearButton:disabled,
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .headerLeft,
+  .headerCenter,
+  .headerRight {
+    flex: none;
+  }
+  
+  .backButton {
+    align-self: flex-start;
+  }
+  
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .dateWeatherSection {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .salesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .buttonSection {
+    flex-direction: column;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .form {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .weatherIcon {
+    font-size: 2.5rem;
+  }
+} 
