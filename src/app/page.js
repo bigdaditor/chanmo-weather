@@ -7,10 +7,14 @@ import styles from "./page.module.css";
 export default function Dashboard() {
   const [salesData, setSalesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+    endDate: new Date().toISOString().slice(0, 10)
+  });
 
   useEffect(() => {
     fetchSalesData();
-  }, []);
+  }, [dateRange]);
 
   const fetchSalesData = async () => {
     try {
@@ -26,10 +30,19 @@ export default function Dashboard() {
     }
   };
 
+  // 날짜 범위 내의 데이터만 필터링
+  const getFilteredData = () => {
+    return salesData.filter(sale => {
+      const saleDate = sale.input_date;
+      return saleDate >= dateRange.startDate && saleDate <= dateRange.endDate;
+    });
+  };
+
   // 날짜별로 그룹화된 매출 데이터
   const getGroupedSales = () => {
+    const filteredData = getFilteredData();
     const grouped = {};
-    salesData.forEach(sale => {
+    filteredData.forEach(sale => {
       if (!grouped[sale.input_date]) {
         grouped[sale.input_date] = {
           date: sale.input_date,
@@ -45,7 +58,8 @@ export default function Dashboard() {
   };
 
   const getTotalSales = () => {
-    return salesData.reduce((total, item) => total + item.amount, 0);
+    const filteredData = getFilteredData();
+    return filteredData.reduce((total, item) => total + item.amount, 0);
   };
 
   const getRecentSales = () => {
@@ -53,18 +67,23 @@ export default function Dashboard() {
   };
 
   const getWeatherStats = () => {
-    const weatherCounts = {};
+    const weatherStats = {};
     const groupedSales = getGroupedSales();
     groupedSales.forEach(group => {
       const weather = group.weather || "맑음";
-      weatherCounts[weather] = (weatherCounts[weather] || 0) + 1;
+      if (!weatherStats[weather]) {
+        weatherStats[weather] = { count: 0, total: 0 };
+      }
+      weatherStats[weather].count += 1;
+      weatherStats[weather].total += group.total;
     });
-    return weatherCounts;
+    return weatherStats;
   };
 
   const getPaymentTypeStats = () => {
     const typeStats = {};
-    salesData.forEach(sale => {
+    const filteredData = getFilteredData();
+    filteredData.forEach(sale => {
       const type = sale.payment_type;
       if (!typeStats[type]) {
         typeStats[type] = { count: 0, total: 0 };
@@ -83,6 +102,20 @@ export default function Dashboard() {
       case "눈": return "❄️";
       default: return "🌤️";
     }
+  };
+
+  const handleDateChange = (field, value) => {
+    setDateRange(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const resetDateRange = () => {
+    setDateRange({
+      startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+      endDate: new Date().toISOString().slice(0, 10)
+    });
   };
 
   if (isLoading) {
@@ -109,6 +142,37 @@ export default function Dashboard() {
         <Link href="/input" className={styles.addButton}>
           + 매출 입력
         </Link>
+      </div>
+
+      {/* 날짜 범위 선택 */}
+      <div className={styles.dateRangeSection}>
+        <div className={styles.dateRangeHeader}>
+          <h2>조회 기간</h2>
+          <button onClick={resetDateRange} className={styles.resetButton}>
+            기본값으로
+          </button>
+        </div>
+        <div className={styles.dateRangeInputs}>
+          <div className={styles.dateInput}>
+            <label htmlFor="startDate">시작일</label>
+            <input
+              id="startDate"
+              type="date"
+              value={dateRange.startDate}
+              onChange={(e) => handleDateChange("startDate", e.target.value)}
+            />
+          </div>
+          <div className={styles.dateSeparator}>~</div>
+          <div className={styles.dateInput}>
+            <label htmlFor="endDate">종료일</label>
+            <input
+              id="endDate"
+              type="date"
+              value={dateRange.endDate}
+              onChange={(e) => handleDateChange("endDate", e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       {/* 통계 카드 */}
@@ -163,9 +227,9 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className={styles.emptyState}>
-            <p>아직 매출 기록이 없습니다.</p>
+            <p>선택한 기간에 매출 기록이 없습니다.</p>
             <Link href="/input" className={styles.emptyStateButton}>
-              첫 매출 입력하기
+              매출 입력하기
             </Link>
           </div>
         )}
@@ -175,12 +239,13 @@ export default function Dashboard() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>날씨별 매출 통계</h2>
         <div className={styles.weatherStats}>
-          {Object.entries(weatherStats).map(([weather, count]) => (
+          {Object.entries(weatherStats).map(([weather, stats]) => (
             <div key={weather} className={styles.weatherStat}>
               <div className={styles.weatherIcon}>{getWeatherIcon(weather)}</div>
               <div className={styles.weatherInfo}>
                 <span className={styles.weatherName}>{weather}</span>
-                <span className={styles.weatherCount}>{count}일</span>
+                <span className={styles.weatherCount}>{stats.count}일</span>
+                <span className={styles.weatherAmount}>{stats.total.toLocaleString()}원</span>
               </div>
             </div>
           ))}

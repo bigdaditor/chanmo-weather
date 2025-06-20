@@ -452,6 +452,102 @@ a.secondary {
   font-size: 1.1rem;
 }
 
+/* 날짜 범위 선택 섹션 */
+.dateRangeSection {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dateRangeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.dateRangeHeader h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.resetButton {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resetButton:hover {
+  background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(127, 140, 141, 0.3);
+}
+
+.dateRangeInputs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dateInput {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.dateInput label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.dateInput input {
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.dateInput input:focus {
+  outline: none;
+  border-color: #3498db;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.dateSeparator {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #7f8c8d;
+  margin: 0 0.5rem;
+}
+
+/* 날씨별 통계 업데이트 */
+.weatherStat .weatherInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weatherAmount {
+  font-weight: 700;
+  color: #27ae60;
+  font-size: 1rem;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .container {
@@ -464,12 +560,33 @@ a.secondary {
     text-align: center;
   }
   
+  .headerLeft,
+  .headerCenter,
+  .headerRight {
+    flex: none;
+  }
+  
   .title {
     font-size: 2rem;
   }
   
   .icon {
     font-size: 2.5rem;
+  }
+  
+  .dateRangeHeader {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .dateRangeInputs {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .dateSeparator {
+    display: none;
   }
   
   .statsGrid {
@@ -516,5 +633,13 @@ a.secondary {
   
   .weatherStats {
     grid-template-columns: 1fr;
+  }
+  
+  .dateRangeSection {
+    padding: 1.5rem;
+  }
+  
+  .dateRangeHeader h2 {
+    font-size: 1.3rem;
   }
 }
