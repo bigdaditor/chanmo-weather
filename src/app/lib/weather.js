@@ -51,10 +51,10 @@ function getWeatherByDate(date) {
 /**
  * 하루 동안의 시간별 날씨 데이터를 기반으로 대표 날씨 상태를 요약합니다.
  * @param {Array} items
- * @returns {string} - '비', '흐림', '맑음' 중 하나
+ * @returns {string} - 'rain', 'cloud', 'clear' 중 하나 (또는 'unknown')
  */
 function summarizeDailyWeather(items) {
-    if (!items || items.length === 0) return '정보 없음';
+    if (!items || items.length === 0) return 'unknown';
 
     let rainFound = false;
     let cloudSum = 0;
@@ -71,9 +71,9 @@ function summarizeDailyWeather(items) {
         }
     }
 
-    if (rainFound) return '비';
-    if (validCloudCount > 0 && (cloudSum / validCloudCount) >= 7) return '흐림';
-    return '맑음';
+    if (rainFound) return 'rain';
+    if (validCloudCount > 0 && (cloudSum / validCloudCount) >= 7) return 'cloud';
+    return 'clear';
 }
 
 module.exports = {
