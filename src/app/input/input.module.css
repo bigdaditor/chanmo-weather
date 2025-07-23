@@ -131,6 +131,34 @@
   opacity: 0.9;
 }
 
+.precipitation {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.weatherLoading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* 매출 입력 섹션 */
 .salesSection {
   margin-bottom: 2rem;
