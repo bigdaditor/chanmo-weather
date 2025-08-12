@@ -23,23 +23,23 @@ export async function getDatabase() {
   return db;
 }
 
-async function createTables() {
-  const database = await getDatabase();
-  
-  // sales 테이블 생성
-  await database.exec(`
-    CREATE TABLE IF NOT EXISTS sales (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      input_date TEXT NOT NULL,
-      weather TEXT NOT NULL,
-      amount INTEGER NOT NULL,
-      payment_type TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-  
-  console.log('데이터베이스 테이블이 생성되었습니다.');
-}
+//async function createTables() {
+//  const database = await getDatabase();
+//
+//  // sales 테이블 생성
+//  await database.exec(`
+//    CREATE TABLE IF NOT EXISTS sales (
+//      id INTEGER PRIMARY KEY AUTOINCREMENT,
+//      input_date TEXT NOT NULL,
+//      weather TEXT NOT NULL,
+//      amount INTEGER NOT NULL,
+//      payment_type TEXT NOT NULL,
+//      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//    )
+//  `);
+//
+//  console.log('데이터베이스 테이블이 생성되었습니다.');
+//}
 
 export async function closeDatabase() {
   if (db) {
