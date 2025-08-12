@@ -1,4 +1,4 @@
-import sqlite3 from 'sqlite3';
+import sqlite3 from 'better-sqlite3';
 import { open } from 'sqlite';
 import path from 'path';
 
@@ -18,7 +18,7 @@ export async function getDatabase() {
   });
 
   // 테이블 생성
-  await createTables();
+  // await createTables();
   
   return db;
 }
