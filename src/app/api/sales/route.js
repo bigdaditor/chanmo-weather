@@ -44,33 +44,24 @@ export async function POST(req) {
 
     const db = await getDatabase();
     const inputDate = data.date;
-    const weather = data.weather || "맑음";
+    const weather = data.weather || "unknown";
     const salesData = data.sales;
-    
-    // 각 매출처별로 데이터베이스에 저장
-    const paymentTypes = {
-      cash: "현금",
-      card: "카드", 
-      onnuri: "온누리상품권",
-      delivery: "배달",
-      other: "기타"
-    };
-    
+
     const savedRecords = [];
-    
+
     for (const [type, amount] of Object.entries(salesData)) {
       if (amount && parseInt(amount) > 0) {
         const result = await db.run(`
           INSERT INTO sales (input_date, weather, amount, payment_type)
           VALUES (?, ?, ?, ?)
-        `, [inputDate, weather, parseInt(amount), paymentTypes[type]]);
-        
+        `, [inputDate, weather, parseInt(amount), type]);
+
         savedRecords.push({
           id: result.lastID,
           input_date: inputDate,
           weather: weather,
           amount: parseInt(amount),
-          payment_type: paymentTypes[type]
+          payment_type: type
         });
       }
     }
